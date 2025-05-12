@@ -7,8 +7,9 @@ import {
   Store,
   Award,
   LogOut,
+  Coins,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarItemProps {
   icon: React.ReactNode;
@@ -18,14 +19,26 @@ interface SidebarItemProps {
 }
 
 const SidebarItem = ({ icon, label, href, active }: SidebarItemProps) => {
-  return (
+  const location = useLocation();
+  const isCurrent = location.pathname === href;
+
+  return isCurrent ? (
+    <div
+      className={cn(
+        "flex items-center gap-3 px-4 py-3 rounded-lg bg-[#FFB347] text-white font-semibold cursor-default shadow-md border border-[#FFB347]/30",
+      )}
+    >
+      <div className="w-5 h-5">{icon}</div>
+      <span>{label}</span>
+    </div>
+  ) : (
     <Link
       to={href}
       className={cn(
-        "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
+        "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-nightblue font-semibold hover:bg-[#FFB347]/80 hover:text-white",
         active
-          ? "bg-primary/10 text-primary font-medium"
-          : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+          ? "bg-[#FFB347] text-white font-semibold"
+          : ""
       )}
     >
       <div className="w-5 h-5">{icon}</div>
@@ -42,23 +55,22 @@ export function Sidebar({ className }: SidebarProps) {
   return (
     <div
       className={cn(
-        "flex flex-col h-screen bg-white border-r p-4 w-64 fixed left-0 top-0",
+        "flex flex-col h-screen bg-white border-r p-4 w-64 fixed left-0 top-0 shadow-md",
         className,
       )}
     >
       <div className="flex items-center gap-2 px-2 py-4">
-        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-          <span className="text-primary-foreground font-bold">MF</span>
-        </div>
-        <h1 className="text-xl font-bold">MyFidelity</h1>
+        <h1 className="text-2xl font-bold">
+          <span className="text-primary">My</span>
+          <span className="text-nightblue">Fidelity</span>
+        </h1>
       </div>
 
       <div className="space-y-1 mt-8">
         <SidebarItem
           icon={<Home size={20} />}
           label="Dashboard"
-          href="/"
-          active
+          href="/dashboard"
         />
         <SidebarItem
           icon={<BarChart2 size={20} />}
@@ -71,16 +83,20 @@ export function Sidebar({ className }: SidebarProps) {
           href="/communication"
         />
         <SidebarItem
-          icon={<Users size={20} />}
-          label="Employés"
-          href="/employees"
+          icon={<Coins size={20} />}
+          label="Caisses"
+          href="/cashregisters"
         />
         <SidebarItem
           icon={<Store size={20} />}
           label="Restaurants"
           href="/restaurants"
         />
-        <SidebarItem icon={<Award size={20} />} label="Points" href="/points" />
+        <SidebarItem
+          icon={<Award size={20} />}
+          label="Offres"
+          href="/offers"
+        />
       </div>
 
       <div className="mt-auto">

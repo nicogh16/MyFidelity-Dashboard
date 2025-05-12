@@ -18,39 +18,47 @@ module.exports = {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: "#F3F4F6",
+        input: "#F3F4F6",
+        ring: "#FFD580",
+        background: "#FAFAFA",
+        foreground: "#0F172A",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#FFB347",
+          foreground: "#fff",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "#FFD580",
+          foreground: "#0F172A",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#FFD580",
+          foreground: "#0F172A",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+        success: {
+          DEFAULT: "#4ADE80",
+          foreground: "#fff",
+        },
+        error: {
+          DEFAULT: "#F87171",
+          foreground: "#fff",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "#fff",
+          foreground: "#0F172A",
         },
+        muted: {
+          DEFAULT: "#F3F4F6",
+          foreground: "#0F172A",
+        },
+        popover: {
+          DEFAULT: "#fff",
+          foreground: "#0F172A",
+        },
+        nightblue: "#0F172A",
+        gold: "#FFD580",
+        orange: "#FFB347",
+        pearl: "#F3F4F6",
       },
       borderRadius: {
         lg: "var(--radius)",

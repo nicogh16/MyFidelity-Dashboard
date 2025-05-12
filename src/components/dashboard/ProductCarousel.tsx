@@ -2,7 +2,8 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProductCard } from "./ProductCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { useRef, useState } from "react";
 
 interface ProductCarouselProps {
   className?: string;
@@ -62,36 +63,88 @@ const PRODUCTS = [
 ];
 
 export function ProductCarousel({ className }: ProductCarouselProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollIndex, setScrollIndex] = useState(0);
+  const visibleCount = 2; // Nombre de produits visibles à la fois
+
+  const scrollToIndex = (idx: number) => {
+    if (!scrollRef.current) return;
+    const children = scrollRef.current.children;
+    if (children[idx]) {
+      (children[idx] as HTMLElement).scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    }
+  };
+
+  const handlePrev = () => {
+    const newIndex = Math.max(0, scrollIndex - 1);
+    setScrollIndex(newIndex);
+    scrollToIndex(newIndex);
+  };
+  const handleNext = () => {
+    const newIndex = Math.min(PRODUCTS.length - visibleCount, scrollIndex + 1);
+    setScrollIndex(newIndex);
+    scrollToIndex(newIndex);
+  };
+
   return (
-    <Card className={cn("w-full", className)}>
+    <Card className={cn("w-full bg-white border border-slate-100 shadow-sm", className)}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-lg font-medium">
+        <CardTitle className="text-base font-semibold text-gray-800 tracking-tight">
           Produits populaires
         </CardTitle>
-        <div className="flex items-center gap-1">
-          <Button variant="outline" size="icon" className="h-8 w-8">
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8">
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+        <Link 
+          to="/restaurants" 
+          className="text-sm text-[#FFB74D] hover:text-[#FFA726] flex items-center gap-1 transition-colors duration-200"
+        >
+          Voir plus <ChevronRight className="w-4 h-4" />
+        </Link>
       </CardHeader>
       <CardContent>
-        <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6">
-          {PRODUCTS.map((product) => (
-            <ProductCard
-              key={product.id}
-              name={product.name}
-              image={product.image}
-              calories={product.calories}
-              rating={product.rating}
-              lowCO2={product.lowCO2}
-              bestseller={product.bestseller}
-            />
-          ))}
+        <div className="relative flex items-center">
+          <button
+            className="absolute left-0 z-10 bg-white border border-slate-200 rounded-full shadow-sm p-1 -ml-3 disabled:opacity-30 disabled:cursor-not-allowed"
+            onClick={handlePrev}
+            disabled={scrollIndex === 0}
+            aria-label="Précédent"
+            style={{ top: '50%', transform: 'translateY(-50%)' }}
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <div
+            ref={scrollRef}
+            className="flex gap-3 overflow-x-hidden pb-2 px-1 w-full"
+            style={{ scrollBehavior: 'smooth' }}
+          >
+            {PRODUCTS.map((product) => (
+              <div key={product.id} className="animate-fadein-smooth">
+                <ProductCard
+                  name={product.name}
+                  image={product.image}
+                  calories={product.calories}
+                  rating={product.rating}
+                  lowCO2={product.lowCO2}
+                  bestseller={product.bestseller}
+                />
+              </div>
+            ))}
+          </div>
+          <button
+            className="absolute right-0 z-10 bg-white border border-slate-200 rounded-full shadow-sm p-1 -mr-3 disabled:opacity-30 disabled:cursor-not-allowed"
+            onClick={handleNext}
+            disabled={scrollIndex >= PRODUCTS.length - visibleCount}
+            aria-label="Suivant"
+            style={{ top: '50%', transform: 'translateY(-50%)' }}
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
       </CardContent>
     </Card>
   );
 }
+
+// Animation CSS à ajouter dans index.css ou tailwind.config.js :
+// .animate-fadein-smooth { animation: fadein-smooth 1.2s cubic-bezier(.4,0,.2,1); }
+// @keyframes fadein-smooth { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: none; } }
+// Pour masquer la scrollbar :
+// .overflow-x-hidden::-webkit-scrollbar { display: none; }
